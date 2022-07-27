@@ -41,16 +41,23 @@ public class LocationResponseTranslator
                                 .destinationStation( transformCheckpoints( con.getTo() ) )
                                 .duration( con.getDuration() )
                                 .platform( con.getFrom().getPlatform() )
-                                .stopStations( transformStopStatuses( con.getSections().get( 0 ) ) ).build();
+                                .stopStations( transformStopStatuses( con.getSections() ) )
+                                .build();
     }
 
 
-    private List<StopStations> transformStopStatuses( final Sections sections )
+    private List<StopStations> transformStopStatuses( final List<Sections> sections )
     {
         List<StopStations> stopStations = new ArrayList<>();
-        for ( Checkpoint checkpoint : sections.getJourney().getPassList() )
+        for(Sections section : sections)
         {
-            stopStations.add( addStopStation( checkpoint ) );
+            if( section.getJourney() != null  )
+            {
+                for ( Checkpoint checkpoint : section.getJourney().getPassList() )
+                {
+                    stopStations.add( addStopStation( checkpoint ) );
+                }
+            }
         }
         return stopStations;
     }

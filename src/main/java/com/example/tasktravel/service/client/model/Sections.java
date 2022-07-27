@@ -7,7 +7,7 @@ import lombok.Data;
 public class Sections
 {
     private Journey journey;
-    private String walk;
+    private Walk walk;
     private Checkpoint departure;
     private Checkpoint arrival;
 }

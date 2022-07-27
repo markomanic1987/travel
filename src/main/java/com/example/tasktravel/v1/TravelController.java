@@ -34,7 +34,7 @@ public class TravelController
         }
         catch ( Throwable e )
         {
-            return new ResponseEntity<>( LocationResponse.builder().error( new SwisApiResponseError(e.getMessage()) ).build(), HttpStatus.BAD_REQUEST );
+            return new ResponseEntity<>( LocationResponse.builder().error( new SwisApiResponseError(e.getMessage()+" "+e.toString()) ).build(), HttpStatus.BAD_REQUEST );
         }
 
 
