@@ -25,7 +25,6 @@ public class TravelController
                      method= RequestMethod.POST ,
                      consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LocationResponse> findLocationToTravel( @RequestBody final Location location )
-          throws Throwable
 
     {
         LocationResponse locationResponse;

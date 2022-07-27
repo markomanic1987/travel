@@ -1,14 +1,8 @@
 package com.example.tasktravel.service.client;
 
 
-import com.example.tasktravel.model.LocStation;
 import com.example.tasktravel.model.Location;
 import com.example.tasktravel.model.LocationResponse;
-import com.example.tasktravel.model.StopStations;
-import com.example.tasktravel.model.TravelArraingmens;
-import com.example.tasktravel.service.client.model.Checkpoint;
-import com.example.tasktravel.service.client.model.Connections;
-import com.example.tasktravel.service.client.model.Sections;
 import com.example.tasktravel.service.client.model.SwissApiResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,11 +23,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -45,6 +36,8 @@ public class SwissApiCLient
     private  RestTemplate restTemplate;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private LocationResponseTranslator locationResponseTranslator;
 
 
     public SwissApiCLient( final RestTemplate restTemplate )
@@ -64,67 +57,11 @@ public class SwissApiCLient
         SwissApiResponse swissApiResponse= exchange( null, queryParams, httpEntity, new ParameterizedTypeReference<SwissApiResponse>() {} )
               .orElse( null );
         if(swissApiResponse.getConnections().isEmpty()){
-            throw new Throwable( "There is no connection between towns try new towns");
+            throw new Throwable( "There is no connection between towns, try new towns");
         }
-        LocationResponse locationResponse = transformTolocation(swissApiResponse);
+        LocationResponse locationResponse = locationResponseTranslator.transformToLocation(swissApiResponse);
         return locationResponse;
     }
-
-
-    private LocationResponse transformTolocation( final SwissApiResponse swissApiResponse )
-    {
-        LocationResponse locationResponse = new LocationResponse();
-        locationResponse.setTravelArraingmensList( trasformPosibleArraigments(swissApiResponse.getConnections()) );
-        return locationResponse;
-    }
-
-
-    private List<TravelArraingmens> trasformPosibleArraigments( final List<Connections> connections )
-    {
-        return connections.stream()
-              .map( con -> mapConnection(con)  )
-              .collect( Collectors.toList() );
-    }
-
-
-    private TravelArraingmens mapConnection( final Connections con )
-    {
-      return TravelArraingmens.builder().arivalStation( transformCheckpoints(con.getFrom()) )
-              .destinationStation( transformCheckpoints(con.getTo()) )
-              .duration( con.getDuration() )
-              .platform( con.getFrom().getPlatform() )
-              .stopStations( transforStopStatuses(con.getSections().get( 0 )) ).build();
-
-    }
-
-
-    private List<StopStations> transforStopStatuses( final Sections sections )
-    {
-        List<StopStations> stopStations = new ArrayList<>();
-        for (Checkpoint checkpoint:sections.getJourney().getPassList() ){
-            stopStations.add( addStopStation(checkpoint) );
-        }
-        return stopStations;
-    }
-
-
-    private StopStations addStopStation( final Checkpoint checkpoint )
-    {
-        return StopStations.builder().arrival( checkpoint.getArrival() )
-                           .departure( checkpoint.getDeparture() )
-                           .id( checkpoint.getStation().getId() )
-                           .name( checkpoint.getStation().getName() ).build();
-    }
-
-
-    private LocStation transformCheckpoints( final Checkpoint from )
-    {
-      return   LocStation.builder().id( from.getStation().getId() )
-              .name( from.getStation().getName() )
-              .build();
-    }
-
-
 
     private <T> Optional<T> exchange( final String url,
                                       final MultiValueMap<String, String> queryParams,

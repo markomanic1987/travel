@@ -10,4 +10,6 @@ public class LocStation
 {
     private String id;
     private String name;
+    private String departure;
+    private String arrival;
 }
