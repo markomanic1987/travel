@@ -1,6 +1,5 @@
 package com.example.tasktravel.model;
 
-import com.example.tasktravel.service.client.model.SwissApiResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class LocationResponse
 {
-    private List<TravelArraingmens> travelArraingmensList;
+    private List<TravelArraignment> travelArraignmentList;
 
     private SwisApiResponseError error;
 }

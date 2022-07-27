@@ -7,9 +7,9 @@ import java.util.List;
 
 @Data
 @Builder
-public class TravelArraingmens
+public class TravelArraignment
 {
- private LocStation arivalStation;
+ private LocStation arrivalStation;
  private LocStation destinationStation;
  private String duration;
  private String platform;
