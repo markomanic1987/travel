@@ -13,3 +13,4 @@ Example in body:
 "to":"Genève"
 }
 This application will show you few routes and you can choose the appropriate one 
+Its runs on java 11 and gradle 5.6 and springboot 2

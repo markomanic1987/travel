@@ -1,10 +1,12 @@
 package com.example.tasktravel.service.client.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
+@Builder
 public class Journey
 {
     private String name;

@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class TravelController
 {
     @Autowired
-  private SwissApiCLient cLient;
+    private SwissApiCLient cLient;
 
     @RequestMapping( value ="/v1/locations",
                      method= RequestMethod.POST ,

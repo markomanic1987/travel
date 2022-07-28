@@ -74,7 +74,8 @@ public class LocationResponseTranslator
 
     private LocStation transformCheckpoints( final Checkpoint from )
     {
-        return LocStation.builder().id( from.getStation().getId() )
+        return LocStation.builder()
+                         .id( from.getStation().getId() )
                          .name( from.getStation().getName() )
                          .arrival( from.getArrival() )
                          .departure( from.getDeparture() )
