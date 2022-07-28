@@ -56,18 +56,17 @@ public class SwissApiCLient
         MultiValueMap<String, String> queryParams = convert( location );
         SwissApiResponse swissApiResponse= exchange( null, queryParams, httpEntity, new ParameterizedTypeReference<SwissApiResponse>() {} )
               .orElse( null );
-        if(swissApiResponse.getConnections().isEmpty()){
+        if( swissApiResponse == null || swissApiResponse.getConnections().isEmpty()){
             throw new Throwable( "There is no connection between towns, try new towns");
         }
-        LocationResponse locationResponse = locationResponseTranslator.transformToLocation(swissApiResponse);
-        return locationResponse;
+        return locationResponseTranslator.transformToLocation( swissApiResponse);
     }
 
     private <T> Optional<T> exchange( final String url,
                                       final MultiValueMap<String, String> queryParams,
                                       final HttpEntity<?> httpEntity,
                                       final ParameterizedTypeReference<T> responseTypeReference )
-          throws Exception
+          throws Throwable
     {
         final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromHttpUrl( BASE_URL );
         uriComponentsBuilder.path( url );
@@ -92,7 +91,7 @@ public class SwissApiCLient
                 case NOT_FOUND:
                     break;
                 default:
-                    throw new Exception( e.getMessage() );
+                    throw new Throwable( e.getMessage() );
             }
         }
         return Optional.ofNullable( responseEntity )
@@ -100,8 +99,11 @@ public class SwissApiCLient
     }
     private MultiValueMap<String,String> convert (Location location){
         MultiValueMap parameters = new LinkedMultiValueMap<String, String>();
-        Map<String, String> maps = objectMapper.convertValue( location, new TypeReference<Map<String, String>>() {});
-        parameters.setAll(maps);
+        Map<String, String> maps = objectMapper.convertValue( location, new TypeReference<>() {});
+        if(maps != null)
+        {
+            parameters.setAll( maps );
+        }
         return parameters;
     }
 }
